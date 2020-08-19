@@ -1,6 +1,5 @@
 #alphavantage debug
 #https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=AAPL&apikey=8C7LNHUO0MZEPUTC
-#===========================================================================================================
 import requests, json
 import pandas as pd
 import matplotlib.pyplot as plt 
@@ -63,12 +62,13 @@ def ProcessYAML (yaml_file) :
         if debug == True : print("YAML file:\n", y_data)
     return (y_data)    
 #===========================================================================================================
+yaml_data = ProcessYAML('alpha.yaml')                                     #yaml settings are global variables
+debug = yaml_data['debug']                                                #debug mode?
+plot = yaml_data['plot']                                                  #plot mode?  
+copy_to_file = yaml_data['copy_to_file']                                  #file output
+api_key = yaml_data['api_key_dev']
+#===========================================================================================================
 if __name__ == "__main__":                                                    #only run when this is called by itself and not imported
-    yaml_data = ProcessYAML('alpha.yaml')                                     #yaml settings are global variables
-    debug = yaml_data['debug']                                                #debug mode?
-    plot = yaml_data['plot']                                                  #plot mode?  
-    copy_to_file = yaml_data['copy_to_file']                                  #file output
-    api_key = yaml_data['api_key_dev']
     stock_symbol = AskInputShareCode() 
     if copy_to_file == True : import w_logger                                 #send a copy of stout to w_output.log
     if debug == True : print (api_key)
