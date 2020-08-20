@@ -8,7 +8,7 @@ import pathlib
 import yaml                                                                             # import pyyaml package
 #=== Function to get real time stock value from Alphavantage ===============================================
 def RealTimeSharePrice (stock_symbol, api_key) :
-    '''This function loads the shareprice from alphavantage'''
+    '''This function loads the current shareprice from alphavantage'''
     base_url = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE"
     main_url = base_url + "&symbol=" + stock_symbol + "&apikey=" + api_key
     req_ob = requests.get(main_url)                     #get method of requests module & return response object
@@ -25,7 +25,7 @@ def RealTimeSharePrice (stock_symbol, api_key) :
     return(share_price)
 #===========================================================================================================
 def HistoricSharePrice (stock_symbol, api_key) :
-    '''This function loads the hsitoric shareprice from alphavantage'''
+    '''This function loads the historic monthly shareprice from alphavantage'''
     base_url = "https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY"
     main_url = base_url + "&symbol=" + stock_symbol + "&apikey=" + api_key
     req_ob = requests.get(main_url)                     #get method of requests module & return response object
@@ -42,10 +42,14 @@ def HistoricSharePrice (stock_symbol, api_key) :
     return(hsp_df)
 #===========================================================================================================
 def PlotHistoricSharePrice (stock_symbol, hsp_df) :
-    fig1, ax1 = plt.subplots(1,1)
-    title1 = "Historic share price"
+    '''This function loads the historic monthly shareprice from alphavantage'''
+    fig1, ax1 = plt.subplots(nrows=1, ncols=2, figsize=(12,5))
+    hsp_df_12 = hsp_df[:12]
+    title1 = "Historic monthly share price"
+    title2 = "12 months monthly share price"
     fig1.canvas.set_window_title(title1)
-    hsp_df.plot(kind='line', use_index=True, y=['4. close'], ax=ax1, title=title1)
+    hsp_df.plot(ax=ax1[0], kind='line', use_index=True, y=['4. close'], title=title1)
+    hsp_df_12.plot(ax=ax1[1], kind='line', use_index=True, y=['4. close'], title=title2)
     plt.legend([stock_symbol], loc='center left', bbox_to_anchor=(1.0, 0.5))
     plt.subplots_adjust(bottom=0.15, left=0.05, right=0.85, top=0.95)
     return()
