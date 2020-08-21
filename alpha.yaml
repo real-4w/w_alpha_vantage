@@ -1,5 +1,6 @@
 ---
-debug : False                                                      # will toggle the debug prints
+debug : True                                                      # will toggle the debug prints
 plot : True                                                       # will toggle the amthplots
 copy_to_file : True                                               # will toggle a copy of the console to log file
-api_key_dev : "XXXXXXXXXXXXXXXX"                                  # insert youf alphavatage.com token
+#api_key_dev : "XXXXXXXXXXXXXXXX"                                  # insert youf alphavatage.com token
+api_key_dev : "4OYY6AT2N9B0WB5X"                                  # dev key to avoid lockout

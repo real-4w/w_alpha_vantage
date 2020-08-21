@@ -24,6 +24,20 @@ def RealTimeSharePrice (stock_symbol, api_key) :
         share_price = float(0)
     return(share_price)
 #===========================================================================================================
+# https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&apikey=demo
+def IntraDayPrice (stock_symbol, api_key) :
+    '''This function loas the intraday data from alphavantage with 5 min gaps'''
+    base_url = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY"
+    main_url = base_url + "&symbol=" + stock_symbol + "&interval=5min" + "&apikey=" + api_key
+    req_ob = requests.get(main_url)                     #get method of requests module & return response object
+    result = req_ob.json()                              #json method return json format data into python dictionary data typ & result contains list of nested dictionaries
+    idp_df=pd.DataFrame.from_dict(result['Time Series (5min)'], orient="index")  # json to df       
+    idp_df.index = pd.to_datetime(idp_df.index, format='%Y-%m-%d')           #https://stackoverflow.com/questions/47124440/build-pandas-dataframe-from-json-data#47560590
+    idp_df.index.name = 'Date'   
+    if debug == True : 
+        print(idp_df[['1. open', '4. close']])
+    return(idp_df)
+#===========================================================================================================
 def HistoricSharePrice (stock_symbol, api_key) :
     '''This function loads the historic monthly shareprice from alphavantage'''
     base_url = "https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY"
@@ -40,6 +54,10 @@ def HistoricSharePrice (stock_symbol, api_key) :
     if debug == True : 
         print(hsp_df[['1. open', '4. close']])
     return(hsp_df)
+#===========================================================================================================
+def PlotIntraDyaPrice (stock_symbol, idp_df) :
+#WIP
+    return()
 #===========================================================================================================
 def PlotHistoricSharePrice (stock_symbol, hsp_df) :
     '''This function loads the historic monthly shareprice from alphavantage'''
@@ -77,8 +95,9 @@ if __name__ == "__main__":                                                    #o
     if copy_to_file == True : import w_logger                                 #send a copy of stout to w_output.log
     if debug == True : print (api_key)
     share_price = RealTimeSharePrice(stock_symbol, api_key)
-    hist_share_price_df = HistoricSharePrice (stock_symbol, api_key)
-    if plot == True : 
-        PlotHistoricSharePrice(stock_symbol, hist_share_price_df)
-        plt.show()
+    intra_day_price_df = IntraDayPrice( stock_symbol, api_key)
+    #hist_share_price_df = HistoricSharePrice (stock_symbol, api_key)
+    #if plot == True : 
+        #PlotHistoricSharePrice(stock_symbol, hist_share_price_df)
+        #plt.show()
     print("===========")
