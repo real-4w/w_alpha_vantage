@@ -3,7 +3,7 @@
 import requests, json
 import pandas as pd
 import matplotlib.pyplot as plt 
-import time                                                                             # delays
+import time                                                                             # delays &timestamp
 import pathlib
 import yaml                                                                             # import pyyaml package
 #=== Function to get real time stock value from Alphavantage ===============================================
@@ -70,6 +70,7 @@ def PlotIntraDayPrice (stock_symbol, idp_df) :
     idp_df.plot(ax=ax2[0], kind='line', use_index=True, y=['4. close'], title=title1, label=[stock_symbol])
     idp_df.plot(ax=ax2[1], kind='line', use_index=True, y=['5. volume'], title=title2, label=[stock_symbol])
     plt.subplots_adjust(bottom=0.15, left=0.05, right=0.85, top=0.95)
+    if copy_to_file == True : SaveFig(fig2, stock_symbol + '_day')
     return()
 #===========================================================================================================
 def PlotHistoricSharePrice (stock_symbol, hsp_df) :
@@ -82,6 +83,14 @@ def PlotHistoricSharePrice (stock_symbol, hsp_df) :
     hsp_df.plot(ax=ax1[0], kind='line', use_index=True, y=['4. close'], title=title1 , label=[stock_symbol])
     hsp_df_12.plot(ax=ax1[1], kind='line', use_index=True, y=['4. close'], title=title2, label=[stock_symbol])
     plt.subplots_adjust(bottom=0.15, left=0.05, right=0.85, top=0.95)
+    if copy_to_file == True : SaveFig(fig1, stock_symbol + '_history')
+    return()
+#===========================================================================================================
+def SaveFig(fig, name) :
+    '''This function saves the fig using a timestamp & name parameters'''
+    name = time.strftime("%Y%m%d-%H%M%S") + '_' + name + '.png'
+    if debug == True : print (name)
+    fig.savefig(name)
     return()
 #===========================================================================================================
 def AskInputShareCode (): 
