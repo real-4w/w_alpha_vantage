@@ -38,8 +38,9 @@ def IntraDayPrice (stock_symbol, api_key) :
     idp_df['2. high'] = idp_df['2. high'].astype(float)
     idp_df['3. low'] = idp_df['3. low'].astype(float)
     idp_df['4. close'] = idp_df['4. close'].astype(float) 
+    idp_df['5. volume'] = idp_df['5. volume'].astype(float) 
     if debug == True : 
-        print(idp_df[['1. open', '4. close']])
+        print(idp_df[['1. open', '4. close', '5. volume']])
     return(idp_df)
 #===========================================================================================================
 def HistoricSharePrice (stock_symbol, api_key) :
@@ -55,6 +56,7 @@ def HistoricSharePrice (stock_symbol, api_key) :
     hsp_df['2. high'] = hsp_df['2. high'].astype(float)
     hsp_df['3. low'] = hsp_df['3. low'].astype(float)
     hsp_df['4. close'] = hsp_df['4. close'].astype(float)
+    hsp_df['5. volume'] = hsp_df['5. volume'].astype(float) 
     if debug == True : 
         print(hsp_df[['1. open', '4. close']])
     return(hsp_df)
@@ -63,8 +65,10 @@ def PlotIntraDayPrice (stock_symbol, idp_df) :
     '''This function loads the intra day graph'''
     fig2, ax2 = plt.subplots(nrows=1, ncols=2, figsize=(12,5))
     title1 = "Intraday price " + stock_symbol
+    title2 = "Intraday volume " + stock_symbol
     fig2.canvas.set_window_title(title1)
     idp_df.plot(ax=ax2[0], kind='line', use_index=True, y=['4. close'], title=title1, label=[stock_symbol])
+    idp_df.plot(ax=ax2[1], kind='line', use_index=True, y=['5. volume'], title=title2, label=[stock_symbol])
     plt.subplots_adjust(bottom=0.15, left=0.05, right=0.85, top=0.95)
     return()
 #===========================================================================================================
