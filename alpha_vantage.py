@@ -1,12 +1,9 @@
 #alphavantage debug
 #https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=AAPL&apikey=8C7LNHUO0MZEPUTC
-import requests, json
+import requests, json, time, yaml, pathlib
 import pandas as pd
 import matplotlib.pyplot as plt 
-import time                                                                             # delays &timestamp
-import pathlib
-import yaml                                                                             # import pyyaml package
-#=== Function to get real time stock value from Alphavantage ===============================================
+#===========================================================================================================
 def RealTimeSharePrice (stock_symbol, api_key) :
     '''This function loads the current shareprice from alphavantage'''
     base_url = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE"
@@ -23,7 +20,7 @@ def RealTimeSharePrice (stock_symbol, api_key) :
     else:
         share_price = float(0)
     return(share_price)
-#===========================================================================================================
+
 # https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&apikey=demo
 def IntraDayPrice (stock_symbol, api_key) :
     '''This function loas the intraday data from alphavantage with 5 min gaps'''
@@ -66,7 +63,7 @@ def PlotIntraDayPrice (stock_symbol, idp_df) :
     fig2, ax2 = plt.subplots(nrows=1, ncols=2, figsize=(12,5))
     title1 = "Intraday price " + stock_symbol
     title2 = "Intraday volume " + stock_symbol
-    fig2.canvas.set_window_title(title1)
+    fig2.canvas.manager.set_window_title(title1)
     idp_df.plot(ax=ax2[0], kind='line', use_index=True, y=['4. close'], title=title1, label=[stock_symbol])
     idp_df.plot(ax=ax2[1], kind='line', use_index=True, y=['5. volume'], title=title2, label=[stock_symbol])
     plt.subplots_adjust(bottom=0.15, left=0.05, right=0.85, top=0.95)
@@ -79,7 +76,7 @@ def PlotHistoricSharePrice (stock_symbol, hsp_df) :
     hsp_df_12 = hsp_df[:12]
     title1 = "Historic monthly share price " + stock_symbol
     title2 = "Monthly share price for last year " + stock_symbol
-    fig1.canvas.set_window_title(title1)
+    fig1.canvas.manager.set_window_title(title1)
     hsp_df.plot(ax=ax1[0], kind='line', use_index=True, y=['4. close'], title=title1 , label=[stock_symbol])
     hsp_df_12.plot(ax=ax1[1], kind='line', use_index=True, y=['4. close'], title=title2, label=[stock_symbol])
     plt.subplots_adjust(bottom=0.15, left=0.05, right=0.85, top=0.95)
@@ -103,12 +100,11 @@ def ProcessYAML (yaml_file) :
         y_data = yaml.load(f, Loader=yaml.FullLoader)
         debug = y_data['debug']
         if debug == True : print("YAML file:\n", y_data)
-    return (y_data)    
+    return (debug, y_data)    
 #===========================================================================================================
-yaml_data = ProcessYAML('alpha.yaml')                                     #yaml settings are global variables
-debug = yaml_data['debug']                                                #debug mode?
-plot = yaml_data['plot']                                                  #plot mode?  
-copy_to_file = yaml_data['copy_to_file']                                  #file output
+debug, yaml_data = ProcessYAML('alpha.yaml')                                        #yaml settings are global variables
+plot = yaml_data['plot']                                                            #plot mode?  
+copy_to_file = yaml_data['copy_to_file']                                              #file output
 api_key = yaml_data['api_key_dev']
 #===========================================================================================================
 if __name__ == "__main__":                                                    #only run when this is called by itself and not imported
