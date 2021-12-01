@@ -1,8 +1,9 @@
-#alphavantage debug
+#1/12/2021: tidy up
 #https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=AAPL&apikey=8C7LNHUO0MZEPUTC
-import requests, json, time, yaml, pathlib
 import pandas as pd
 import matplotlib.pyplot as plt 
+import requests, time, pathlib, yaml, os                                                                       # import pyyaml package
+from cli_badges import badge
 #===========================================================================================================
 def RealTimeSharePrice (stock_symbol, api_key) :
     '''This function loads the current shareprice from alphavantage'''
@@ -16,7 +17,19 @@ def RealTimeSharePrice (stock_symbol, api_key) :
         print("Lenght ", len(result["Global Quote"]))
     if len(result["Global Quote"]) > 0: 
         share_price = float(result["Global Quote"]['05. price'])
-        print("Realtime share price for", result["Global Quote"]["01. symbol"], "price", result["Global Quote"]["05. price"], "change", result["Global Quote"]["09. change"])
+        share_change = float(result["Global Quote"]["09. change"])
+        if share_change >= 0 :
+            messagebg = 'green'
+        else :
+            messagebg = 'red'
+        label = result["Global Quote"]["01. symbol"]
+        price = result["Global Quote"]["05. price"]
+        change = result["Global Quote"]["09. change"]
+        PriceBadge = badge(label, price, messagebg='blue',messagecolor='black')
+        ChangeBadge = badge(label, change, messagebg=messagebg, messagecolor='black')
+        print(PriceBadge, ChangeBadge, "\n")
+        if debug == True : 
+            print("Realtime share price for", result["Global Quote"]["01. symbol"], "price", result["Global Quote"]["05. price"], "change", result["Global Quote"]["09. change"])
     else:
         share_price = float(0)
     return(share_price)
@@ -84,10 +97,11 @@ def PlotHistoricSharePrice (stock_symbol, hsp_df) :
     return()
 #===========================================================================================================
 def SaveFig(fig, name) :
-    '''This function saves the fig using a timestamp & name parameters'''
+    '''This function saves the fig in <png> dir using a timestamp & name parameters'''
+    path = pathlib.Path.cwd() / "png"
     name = time.strftime("%Y%m%d-%H%M%S") + '_' + name + '.png'
     if debug == True : print (name)
-    fig.savefig(name)
+    fig.savefig(os.path.join(path, name))
     return()
 #===========================================================================================================
 def AskInputShareCode (): 
